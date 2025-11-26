@@ -26,7 +26,7 @@ namespace Mi_primer_API.Services
             throw new NotImplementedException();
         }
 
-        public async Task<CategoryDto> CreateCategoryAsync(CategoryCreateDto categoryCreateDto)
+        public async Task<CategoryDto> CreateCategoryAsync(CategoryCreateUpdateDto categoryCreateDto)
         {
             //Validar si la categoria ya existe
             var categoryExist = await _categoryRepository.CategoryExistsByNameAsync(categoryCreateDto.Name);
@@ -54,7 +54,21 @@ namespace Mi_primer_API.Services
 
         public async Task<bool> DeleteCategoryAsync(int id)
         {
-            throw new NotImplementedException();
+            //Verificar si la categoria existe
+            var categoryExist = await _categoryRepository.GetCategoryAsync(id);
+            if (categoryExist == null)
+            {
+                throw new InvalidOperationException($"No se encontro la categoria con ID'{id}' "); //La categoria ya existe
+            }
+            //Eliminar la categoria
+            var categoryDeleted = await _categoryRepository.DeleteCategoryAsync(id);
+
+            if (!categoryDeleted)
+            {
+                throw new Exception("Error al eliminar la categoria"); //Error al crear la categoria
+            }
+
+            return categoryDeleted;
         }
 
         public async Task<ICollection<CategoryDto>> GetCategoriesAsync()
@@ -70,17 +84,47 @@ namespace Mi_primer_API.Services
         {
             var category = await _categoryRepository.GetCategoryAsync(id);//Lamando el metodo desde la capa de repository
 
+            if (category == null)
+            {
+                throw new InvalidOperationException($"No se encontro la categoria con ID'{id}' "); //La categoria ya existe
+            }
+
             return _mapper.Map<CategoryDto>(category);//Mapeando la lista de categorias a una lista de categorias DTO
         }
 
-        public async Task<bool> UpdateCategoryAsync(Category category)
+        public async Task<CategoryDto> UpdateCategoryAsync(CategoryCreateUpdateDto dto, int id)
         {
-            throw new NotImplementedException();
+            
+
+            //Validar si la categoria ya existe
+            var categoryExist = await _categoryRepository.GetCategoryAsync(id);
+
+            if (categoryExist == null)
+            {
+                throw new InvalidOperationException($"No se encontro la categoria con ID'{id}' "); //La categoria ya existe
+            }
+
+            var nameExist = await _categoryRepository.CategoryExistsByNameAsync(dto.Name);
+
+            if (nameExist)            
+            {
+                throw new InvalidOperationException($"Ya existe una categoria con el nombre de '{dto.Name}' "); //La categoria ya existe
+            }
+
+
+            //Mapear el DTO a la entidad Category
+            _mapper.Map(dto, categoryExist);    
+
+          //Actualizamos la categoria
+          var categoryUpdated = await _categoryRepository.UpdateCategoryAsync(categoryExist);
+            if (!categoryUpdated)
+            {
+                throw new Exception("Error al actualizar la categoria"); //Error al crear la categoria
+            }
+            //Retornar el Dto Actualizado
+            return _mapper.Map<CategoryDto>(categoryExist);
         }
 
-        public Task<CategoryDto> UpdateCategoryAsync(int id, CategoryCreateDto categoryDto)
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

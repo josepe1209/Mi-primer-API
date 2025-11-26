@@ -32,8 +32,16 @@ namespace Mi_primer_API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<CategoryDto>> GetCategoryAsync(int id)
         {
-            var categoryDto = await _categoryService.GetCategoryAsync(id);
-            return Ok(categoryDto); //http status code 200 
+            try
+            {
+                var categoryDto = await _categoryService.GetCategoryAsync(id);
+                return Ok(categoryDto); //http status code 200 
+            }
+            catch (InvalidOperationException ex) when (ex.Message.Contains("No se encontro"))
+            {
+                return NotFound(new { ex.Message });
+            }
+            
         }
 
         [HttpPost( Name = "CreateCategoryAsync")]
@@ -42,7 +50,7 @@ namespace Mi_primer_API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult<CategoryDto>>CreateCategoryAsync([FromBody] CategoryCreateDto categoryCreateDto)
+        public async Task<ActionResult<CategoryDto>>CreateCategoryAsync([FromBody] CategoryCreateUpdateDto categoryCreateDto)
         {
             if(!ModelState.IsValid)
             {
@@ -65,5 +73,66 @@ namespace Mi_primer_API.Controllers
             
         }
 
-    }
+        [HttpPut("{id:int}",Name = "UpdateCategoryAsync")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<CategoryDto>> UpdateCategoryAsync([FromBody] CategoryCreateUpdateDto dto, int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var uodatedCategory = await _categoryService.UpdateCategoryAsync(dto, id);
+               return Ok(uodatedCategory);
+
+            }
+            catch (InvalidOperationException ex) when (ex.Message.Contains("Ya existe"))
+            {
+                return Conflict(new { ex.Message });
+            }
+            catch (InvalidOperationException ex) when (ex.Message.Contains("No se encontro"))
+            {
+                return NotFound(new { ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+        }
+
+
+
+
+        [HttpDelete("{id:int}", Name = "DeleteCategoryAsync")]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<bool>> DeleteCategoryAsync( int id)
+        {
+            try
+            {
+                var deletedCategory = await _categoryService.DeleteCategoryAsync(id);
+                return Ok(deletedCategory);
+
+            }
+            catch (InvalidOperationException ex) when (ex.Message.Contains("No se encontro"))
+            {
+                return NotFound(new { ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+        }
+
+
+
+
+    }//Fin controller
 }

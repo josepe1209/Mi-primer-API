@@ -9,8 +9,8 @@ namespace Mi_primer_API.Services.IServices
         Task<CategoryDto> GetCategoryAsync(int id); 
         Task<bool> CategoryExistsByIdAsync(int id); 
         Task<bool> CategoryExistsByNameAsync(string name); 
-        Task<CategoryDto> CreateCategoryAsync(CategoryCreateDto categoryDto); 
-        Task<CategoryDto> UpdateCategoryAsync(int id,CategoryCreateDto categoryDto); 
+        Task<CategoryDto> CreateCategoryAsync(CategoryCreateUpdateDto categoryDto); 
+        Task<CategoryDto> UpdateCategoryAsync(CategoryCreateUpdateDto categoryDto, int id); 
         Task<bool> DeleteCategoryAsync(int id);
     }
 }

@@ -9,7 +9,7 @@ namespace Mi_primer_API.MoviesMapper
         public Mappers()
         {
             CreateMap<Category, CategoryDto>().ReverseMap();
-            CreateMap<Category, CategoryCreateDto>().ReverseMap();
+            CreateMap<Category, CategoryCreateUpdateDto>().ReverseMap();
 
             //Aqui va el mapper de la proxima entidad movie
         }

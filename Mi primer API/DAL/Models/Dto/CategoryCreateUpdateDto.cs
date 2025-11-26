@@ -2,7 +2,7 @@
 
 namespace Mi_primer_API.DAL.Models.Dto
 {
-    public class CategoryCreateDto
+    public class CategoryCreateUpdateDto
     {
         [Required(ErrorMessage = "EL nombre de la categoria es obligatorio")]
         [MaxLength(100, ErrorMessage = "El numero maximo de caracteres es de 100.")]
