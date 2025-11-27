@@ -12,6 +12,8 @@ namespace Mi_primer_API.MoviesMapper
             CreateMap<Category, CategoryCreateUpdateDto>().ReverseMap();
 
             //Aqui va el mapper de la proxima entidad movie
+            CreateMap<Movie, MovieDto>().ReverseMap();
+            CreateMap<Movie, MovieCreateDto>().ReverseMap();
         }
     }
 }
