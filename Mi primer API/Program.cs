@@ -14,13 +14,12 @@ builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseSqlSer
 builder.Services.AddAutoMapper(x => x.AddProfile<Mappers>());
 
 // Dependency Injection for Services
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-//Aqui ira el de Movies
+builder.Services.AddScoped<IMovieService, MovieService>();
+builder.Services.AddScoped<IMovieService, MovieService>();
 
 // Dependency Injection for Repositories
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-//Aqui ira el de Movies
-
+builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 
 
 builder.Services.AddControllers();
