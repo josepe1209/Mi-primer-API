@@ -13,7 +13,7 @@ namespace Mi_primer_API.DAL
         //seccion para crear el Dbset de las entidades o modelo
         public DbSet<Category> Categories { get; set; }
 
-        //public DbSet<Movie> Movies { get; set; }
+        public DbSet<Movie> Movies { get; set; }
 
     }
 }
