@@ -54,6 +54,17 @@ namespace Mi_primer_API.Repository
             return await SaveAsync();
         }
 
+        public async Task<bool> MovieExistsByIdAsync(int id)
+        {
+            return await _context.Movies.AsNoTracking().AnyAsync(c => c.Id == id);
+        }
+
+        public async Task<bool> MovieExistsByNameAsync(string name)
+        {
+            return await _context.Movies.AsNoTracking().AnyAsync(c => c.Name == name);
+
+        }
+
         private async Task<bool> SaveAsync()
         {
             return await _context.SaveChangesAsync() >= 0 ? true : false;

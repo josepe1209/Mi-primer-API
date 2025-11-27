@@ -13,7 +13,7 @@ namespace Mi_primer_API.MoviesMapper
 
             //Aqui va el mapper de la proxima entidad movie
             CreateMap<Movie, MovieDto>().ReverseMap();
-            CreateMap<Movie, MovieCreateDto>().ReverseMap();
+            CreateMap<Movie, MovieCreateUpdateDto>().ReverseMap();
         }
     }
 }

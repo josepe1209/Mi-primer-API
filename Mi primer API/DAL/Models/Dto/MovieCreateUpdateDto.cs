@@ -2,7 +2,7 @@
 
 namespace Mi_primer_API.DAL.Models.Dto
 {
-    public class MovieCreateDto
+    public class MovieCreateUpdateDto
     {
 
         [Required(ErrorMessage = "EL nombre de la pelicula es obligatorio")]
@@ -11,6 +11,9 @@ namespace Mi_primer_API.DAL.Models.Dto
 
         [Required(ErrorMessage = "La duracion de la pelicula es obligatorio")]
         public int Duration { get; set; }
+
+        [MaxLength(150, ErrorMessage = "El numero maximo de caracteres es de 150.")]
+        public string Description { get; set; }
 
         [Required(ErrorMessage = "La clasificacion de la pelicula es obligatorio")]
         [MaxLength(10, ErrorMessage = "El numero maximo de caracteres es de 10.")]

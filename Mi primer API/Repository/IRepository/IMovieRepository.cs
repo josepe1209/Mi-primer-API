@@ -8,9 +8,9 @@ namespace Mi_primer_API.Repository.IRepository
 
         Task<Movie> GetMovieAsync(int id); //Me retorna una pelicula por id
 
-        //Task<bool> MovieExistsByIdAsync(int id); //Me retorna true o false si existe la pelicula por id
+        Task<bool> MovieExistsByIdAsync(int id); //Me retorna true o false si existe la pelicula por id
 
-        //Task<bool> MovieExistsByNameAsync(string name); //Me retorna true o false si existe la pelicula por nombre
+        Task<bool> MovieExistsByNameAsync(string name); //Me retorna true o false si existe la pelicula por nombre
 
         Task<bool> CreateMovieAsync(Movie movie); //Me crea una pelicula
 

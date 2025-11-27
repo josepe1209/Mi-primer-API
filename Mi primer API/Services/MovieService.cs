@@ -18,19 +18,60 @@ namespace Mi_primer_API.Services
 
         }
 
-        public Task<bool> CreateMovieAsync(Movie movie)
+        public async Task<MovieDto> CreateMovieAsync(MovieCreateUpdateDto movieCreateDto)
         {
-            throw new NotImplementedException();
+            //validar si la pelicula ya existe
+            var movieExist = await _movieRepository.MovieExistsByNameAsync(movieCreateDto.Name);
+
+            if (movieExist)
+            {
+                throw new InvalidOperationException($"Ya esxite una pelicula con el nombre de {movieCreateDto.Name}");
+            }
+
+            //Mapear el DTO a la entidad Movie
+            var movie = _mapper.Map<Movie>(movieCreateDto);
+
+            //Crear la pelicula en el repositorio
+            var movieCreated = await _movieRepository.CreateMovieAsync(movie);
+
+            if (!movieCreated)
+            {
+                throw new Exception("Ocurrio un error al crear la pelicula");
+            }
+            //Mapear la entidad creada a Dto
+            return _mapper.Map<MovieDto>(movie);
+
+
         }
 
-        public Task<bool> DeleteMovieAsync(int id)
+        public async Task<bool> DeleteMovieAsync(int id)
         {
-            throw new NotImplementedException();
+            //Verificar si la categoria existe
+            var movieExist = await _movieRepository.GetMovieAsync(id);
+
+            if (movieExist == null)
+            {
+                throw new InvalidOperationException($"No se encontro la pelicula con ID: {id}"); //La pelicula no existe
+            }
+            //Eliminar la pelicula
+            var movieDeleted = await _movieRepository.DeleteMovieAsync(id);
+            if (!movieDeleted)
+            {
+                throw new Exception("Ocurrio un error al eliminar la pelicula"); //Error al eliminar la pelicula
+            }
+            return movieDeleted;
         }
 
-        public Task<MovieDto> GetMovieAsync(int id)
+        public async Task<MovieDto> GetMovieAsync(int id)
         {
-            throw new NotImplementedException();
+            var movie = await _movieRepository.GetMovieAsync(id);
+
+            if (movie == null)
+            {
+                throw new InvalidOperationException($"No se encontro la pelicula con ID: {id}"); //La pelicula no existe
+            }
+
+            return _mapper.Map<MovieDto>(movie);
         }
 
         public async Task<ICollection<MovieDto>> GetMoviesAsync()
@@ -41,9 +82,52 @@ namespace Mi_primer_API.Services
        
         }
 
-        public Task<bool> UpdateMovieAsync(Movie movie)
+        public Task<bool> MovieExistsByIdAsync(int id)
         {
             throw new NotImplementedException();
+        }
+
+        public Task<bool> MovieExistsByNameAsync(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+      
+
+        public async Task<MovieDto> UpdateMovieAsync(MovieCreateUpdateDto dto, int id)
+        {
+           
+
+            //validar si la pelicula ya existe
+            var movieExist = await _movieRepository.GetMovieAsync(id);
+
+            if (movieExist == null)
+            {
+                throw new InvalidOperationException($"No se encontro una pelicula con el id:{id}");
+            }
+
+            var nameExist = await _movieRepository.MovieExistsByNameAsync(dto.Name);
+
+            if (nameExist)
+            {
+                throw new InvalidOperationException($"Ya esxite una pelicula con el nombre de {dto.Name}");
+            }
+
+
+            //Mapear el DTO a la entidad Movie
+             _mapper.Map(dto, movieExist);
+
+            //Actualizar la pelicula 
+            var movieUpdated = await _movieRepository.UpdateMovieAsync(movieExist);
+
+            if (!movieUpdated)
+            {
+                throw new Exception("Ocurrio un error al actualizar la pelicula");
+            }
+
+            //retornar el dto
+            return _mapper.Map<MovieDto>(movieExist);
+
         }
     }
 }
